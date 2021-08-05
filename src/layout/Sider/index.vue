@@ -51,6 +51,7 @@ export default defineComponent({
 
     watch(route, (val) => {
       selectedKeys.value = [val.name];
+      if (openKeys.value.length) return;
       openKeys.value = route.matched.map((e) => e.name);
     });
 

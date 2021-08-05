@@ -1,11 +1,5 @@
 <template>
-  <a-form
-    ref="formRef"
-    :model="formState"
-    :rules="rules"
-    @submit="onSubmit"
-    scrollToFirstError
-  >
+  <a-form ref="formRef" :model="formState" :rules="rules" scrollToFirstError>
     <a-form-item name="username">
       <a-input
         type="text"
@@ -27,7 +21,12 @@
       </a-row>
     </a-form-item>
     <a-form-item>
-      <a-button type="primary" htmlType="submit" :loading="loading">
+      <a-button
+        type="primary"
+        htmlType="submit"
+        @click="onSubmit"
+        :loading="loading"
+      >
         立即登录
       </a-button>
     </a-form-item>
@@ -45,7 +44,6 @@ export default defineComponent({
     const formState = reactive({
       username: "",
       password: "",
-      type: "business",
       setup: false,
     });
     const rules = {
@@ -66,13 +64,18 @@ export default defineComponent({
     };
 
     const onSubmit = async () => {
-      loading.value = true;
-      setTimeout(() => {
-        //调用登录接口 保存token到本地
-        localStorage.setItem("token", toRaw(formState));
-        router.push("/");
-        loading.value = false;
-      }, 1000);
+      try {
+        await formRef.value.validate();
+        loading.value = true;
+        setTimeout(() => {
+          //调用登录接口 保存token到本地
+          localStorage.setItem("token", toRaw(formState));
+          router.push("/");
+          loading.value = false;
+        }, 1000);
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     const resetForm = () => {

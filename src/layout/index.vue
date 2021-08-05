@@ -15,7 +15,7 @@
         </a-layout-header>
         <a-layout-content>
           <LayoutBreadcrumb />
-          <div :style="{ padding: '24px', background: '#fff' }">
+          <div :style="{ padding: '10px', background: '#fff' }">
             <router-view />
           </div>
         </a-layout-content>
@@ -80,11 +80,15 @@ export default defineComponent({
 .ant-layout {
   height: 100%;
   > .ant-layout-header {
+    user-select: none;
     background: #fff;
     padding: 0 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+  > .ant-layout-sider {
+    user-select: none;
   }
   > .ant-layout-content {
     overflow-y: auto;
@@ -95,6 +99,7 @@ export default defineComponent({
     border-style: solid;
 
     > .ant-breadcrumb {
+      user-select: none;
       position: sticky;
       top: 0;
       padding: 5px;
@@ -103,6 +108,7 @@ export default defineComponent({
     }
   }
   > .ant-layout-footer {
+    user-select: none;
     text-align: left;
     padding: 5px;
     background: #fff;

@@ -15,7 +15,9 @@ export default defineComponent({
     watch(route, () => {
       //判断是否刷新页面 跳转到首页添加重新向
       if (route.name) return;
-      router.push("/?replace=" + encodeURIComponent(route.fullPath));
+      router.push(
+        "/?replace=" + encodeURIComponent(route.fullPath.toLowerCase())
+      );
     });
     onErrorCaptured((err) => {
       if (err && typeof err == "string") {
