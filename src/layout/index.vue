@@ -51,16 +51,21 @@ export default defineComponent({
     provide("userInfo", userInfo);
 
     setTimeout(() => {
+      //获取用户信息
       userInfo.value = { name: "许佳俊" };
+      //获取路由信息
       routes.value = addRoutes;
+      //加载路由
       addRoutes.forEach((e) => router.addRoute("layout", e));
+
+      //判断是否重定向页面
       if (route.query.replace) {
         const fullPathList = router.getRoutes().map((e) => e.path);
         const replace = decodeURIComponent(route.query.replace);
         if (fullPathList.includes(replace)) router.replace(route.query.replace);
       }
       spinning.value = false;
-    }, 2000);
+    }, 1000);
 
     return {
       routes,

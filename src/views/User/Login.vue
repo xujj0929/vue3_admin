@@ -27,7 +27,9 @@
       </a-row>
     </a-form-item>
     <a-form-item>
-      <a-button type="primary" htmlType="submit">立即登录</a-button>
+      <a-button type="primary" htmlType="submit" :loading="loading">
+        立即登录
+      </a-button>
     </a-form-item>
   </a-form>
 </template>
@@ -35,11 +37,10 @@
 import { defineComponent, reactive, ref, toRaw } from "vue";
 import { useRouter } from "vue-router";
 
-// import { userLogin } from "@/api/user";
-
 export default defineComponent({
   setup() {
     const router = useRouter();
+    const loading = ref(false);
     const formRef = ref();
     const formState = reactive({
       username: "",
@@ -65,10 +66,13 @@ export default defineComponent({
     };
 
     const onSubmit = async () => {
-      // const res = await userLogin(toRaw(formState));
-      // res && console.info(res);
-      localStorage.setItem("token", toRaw(formState));
-      router.push("/");
+      loading.value = true;
+      setTimeout(() => {
+        //调用登录接口 保存token到本地
+        localStorage.setItem("token", toRaw(formState));
+        router.push("/");
+        loading.value = false;
+      }, 1000);
     };
 
     const resetForm = () => {
@@ -76,6 +80,7 @@ export default defineComponent({
     };
 
     return {
+      loading,
       formRef,
       formState,
       rules,

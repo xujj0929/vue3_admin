@@ -13,6 +13,7 @@ export default defineComponent({
     const router = useRouter();
 
     watch(route, () => {
+      //判断是否刷新页面 跳转到首页添加重新向
       if (route.name) return;
       router.push("/?replace=" + encodeURIComponent(route.fullPath));
     });

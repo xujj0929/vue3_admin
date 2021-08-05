@@ -32,7 +32,7 @@ module.exports = {
           test: /[\\/]node_modules[\\/]_?ant-design-vue(.*)/,
         },
         antDesign: {
-          name: "chunk-ant-design",
+          name: "chunk-ant-design-icons",
           priority: 20,
           test: /[\\/]node_modules[\\/]_?@ant-design(.*)/,
         },
