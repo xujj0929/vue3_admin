@@ -1,30 +1,56 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
   <router-view />
 </template>
 
-<style lang="less">
+<script>
+import { defineComponent, watch, onErrorCaptured } from "vue";
+import { notification } from "ant-design-vue";
+import { useRoute, useRouter } from "vue-router";
+
+export default defineComponent({
+  setup() {
+    const route = useRoute();
+    const router = useRouter();
+
+    watch(route, () => {
+      if (route.name) return;
+      router.push("/?replace=" + encodeURIComponent(route.fullPath));
+    });
+    onErrorCaptured((err) => {
+      if (err && typeof err == "string") {
+        notification.warning({
+          message: "提示",
+          description: err,
+        });
+      }
+    });
+  },
+});
+</script>
+
+<style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #eee;
 }
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+/* 设置滚动条的样式 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+/* 滚动槽 */
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset006pxrgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+/* 滚动条滑块 */
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: inset006pxrgba(0, 0, 0, 0.5);
+}
+::-webkit-scrollbar-thumb:window-inactive {
+  background: rgba(133, 133, 133, 0.7);
 }
 </style>

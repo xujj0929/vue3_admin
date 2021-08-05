@@ -1,18 +1,19 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
-  </div>
+  <div>{{ userInfo }}</div>
+  <div>{{ routes }}</div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import { defineComponent, inject } from "vue";
+export default defineComponent({
+  setup() {
+    const userInfo = inject("userInfo");
+    const routes = inject("routes");
 
-export default {
-  name: "Home",
-  components: {
-    HelloWorld,
+    return {
+      userInfo,
+      routes,
+    };
   },
-};
+});
 </script>
