@@ -41,6 +41,7 @@ export default defineComponent({
 /* 设置滚动条的样式 */
 ::-webkit-scrollbar {
   width: 6px;
+  background: none;
 }
 /* 滚动槽 */
 ::-webkit-scrollbar-track {
@@ -51,9 +52,9 @@ export default defineComponent({
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background: rgba(0, 0, 0, 0.1);
-  -webkit-box-shadow: inset006pxrgba(0, 0, 0, 0.5);
+  -webkit-box-shadow: inset006pxrgba(0, 0, 0, 0.3);
 }
 ::-webkit-scrollbar-thumb:window-inactive {
-  background: rgba(133, 133, 133, 0.7);
+  background: rgba(133, 133, 133, 0.3);
 }
 </style>

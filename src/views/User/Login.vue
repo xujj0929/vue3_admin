@@ -1,5 +1,11 @@
 <template>
-  <a-form ref="formRef" :model="formState" :rules="rules" scrollToFirstError>
+  <a-form
+    ref="formRef"
+    :model="formState"
+    :rules="rules"
+    @finish="onFinish"
+    scrollToFirstError
+  >
     <a-form-item name="username">
       <a-input
         type="text"
@@ -21,15 +27,11 @@
       </a-row>
     </a-form-item>
     <a-form-item>
-      <a-button
-        type="primary"
-        htmlType="submit"
-        @click="onSubmit"
-        :loading="loading"
-      >
+      <a-button type="primary" htmlType="submit" :loading="loading">
         立即登录
       </a-button>
     </a-form-item>
+    <div>{{ copyright }}</div>
   </a-form>
 </template>
 <script>
@@ -39,6 +41,7 @@ import { useRouter } from "vue-router";
 export default defineComponent({
   setup() {
     const router = useRouter();
+    const copyright = process.env.VUE_APP_COPYRIGHT;
     const loading = ref(false);
     const formRef = ref();
     const formState = reactive({
@@ -63,7 +66,7 @@ export default defineComponent({
       ],
     };
 
-    const onSubmit = async () => {
+    const onFinish = async () => {
       try {
         await formRef.value.validate();
         loading.value = true;
@@ -78,17 +81,13 @@ export default defineComponent({
       }
     };
 
-    const resetForm = () => {
-      formRef.value.resetFields();
-    };
-
     return {
       loading,
+      copyright,
       formRef,
       formState,
       rules,
-      onSubmit,
-      resetForm,
+      onFinish,
     };
   },
 });
@@ -109,11 +108,6 @@ export default defineComponent({
     font-size: 18px;
     font-weight: bold;
     padding-bottom: 20px;
-  }
-  &::after {
-    display: block;
-    content: "Copyright © 2018-2020 渝ICP备18008972号-1";
-    text-align: center;
   }
 }
 </style>

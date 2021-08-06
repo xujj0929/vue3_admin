@@ -1,5 +1,5 @@
 <template>
-  <a-spin :spinning="spinning" tip="用户资料加载中...">
+  <a-spin :spinning="routeLoading" tip="用户资料加载中...">
     <a-layout style="height: 100vh">
       <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
         <Sider />
@@ -15,19 +15,19 @@
         </a-layout-header>
         <a-layout-content>
           <LayoutBreadcrumb />
-          <div :style="{ padding: '10px', background: '#fff' }">
+          <div class="router-view">
             <router-view />
           </div>
         </a-layout-content>
-        <a-layout-footer> Ant Design ©2018 Created by Ant UED </a-layout-footer>
+        <a-layout-footer>{{ copyright }}</a-layout-footer>
       </a-layout>
     </a-layout>
   </a-spin>
 </template>
 <script>
 import { defineComponent, ref, provide } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import addRoutes from "@/router/addRoutes";
+import useLoadRouter from "@/hooks/useLoadRouter";
+import useLoadUserInfo from "@/hooks/useLoadUserInfo";
 import Sider from "./Sider";
 import UserDropdown from "./UserDropdown";
 import LayoutBreadcrumb from "./LayoutBreadcrumb";
@@ -39,38 +39,19 @@ export default defineComponent({
     LayoutBreadcrumb,
   },
   setup() {
-    const route = useRoute();
-    const router = useRouter();
+    const copyright = process.env.VUE_APP_COPYRIGHT;
 
     const collapsed = ref(false);
-    const spinning = ref(true);
-    const routes = ref([]);
-    const userInfo = ref(null);
     provide("collapsed", collapsed);
-    provide("routes", routes);
-    provide("userInfo", userInfo);
 
-    setTimeout(() => {
-      //获取用户信息
-      userInfo.value = { name: "许佳俊" };
-      //获取路由信息
-      routes.value = addRoutes;
-      //加载路由
-      addRoutes.forEach((e) => router.addRoute("layout", e));
-
-      //判断是否重定向页面
-      if (route.query.replace) {
-        const fullPathList = router.getRoutes().map((e) => e.path);
-        const replace = decodeURIComponent(route.query.replace);
-        if (fullPathList.includes(replace)) router.replace(route.query.replace);
-      }
-      spinning.value = false;
-    }, 1000);
+    const { loading: routeLoading } = useLoadRouter();
+    const { loading: userInfoLoading } = useLoadUserInfo();
 
     return {
-      routes,
+      copyright,
       collapsed,
-      spinning,
+      routeLoading,
+      userInfoLoading,
     };
   },
 });
@@ -79,6 +60,7 @@ export default defineComponent({
 <style lang="less" scoped>
 .ant-layout {
   height: 100%;
+  background: #fff;
   > .ant-layout-header {
     user-select: none;
     background: #fff;
@@ -91,20 +73,33 @@ export default defineComponent({
     user-select: none;
   }
   > .ant-layout-content {
-    overflow-y: auto;
-    padding: 0 5px;
-    border-top: 5px;
-    border-bottom: 5px;
-    border-color: #eee;
-    border-style: solid;
-
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+    border-radius: 8px;
+    border: 5px solid #eee;
+    background: #fff;
     > .ant-breadcrumb {
+      border-radius: 6px;
       user-select: none;
       position: sticky;
       top: 0;
       padding: 5px;
       background: #fff;
       border-bottom: 2px solid #eee;
+      z-index: 2;
+    }
+    > .router-view {
+      flex: 1;
+      padding-left: 10px;
+      padding-right: 4px;
+      border-top: 10px solid #fff;
+      border-bottom: 10px solid #fff;
+      background: #fff;
+      overflow-y: scroll;
+      // &::-webkit-scrollbar {
+      //   background: #eee;
+      // }
     }
   }
   > .ant-layout-footer {
