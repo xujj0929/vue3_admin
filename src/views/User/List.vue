@@ -1,31 +1,51 @@
 <template>
-  <PageTable :formModel="formState" :columns="columns" :data-source="loadData">
-    <template #form>
-      <a-form-item name="user">
-        <a-input v-model:value="formState.user" placeholder="查询姓名">
-          <template #prefix>
-            <UserOutlined style="color: rgba(0, 0, 0, 0.25)" />
-          </template>
-        </a-input>
-      </a-form-item>
-      <a-form-item name="code">
-        <a-input v-model:value="formState.code" placeholder="查询工号">
-          <template #prefix>
-            <LockOutlined style="color: rgba(0, 0, 0, 0.25)" />
-          </template>
-        </a-input>
-      </a-form-item>
-    </template>
-    <template #button>
-      <a-button type="primary" @click="onExport"> 导出 </a-button>
+  <a-table
+    size="middle"
+    ref="tableRef"
+    :columns="columns"
+    :data-source="dataSource"
+    :scroll="scroll"
+    :pagination="pagination"
+    :loading="loading"
+    @change="onChange"
+    bordered
+  >
+    <template #title>
+      <a-form
+        ref="formRef"
+        :model="formState"
+        layout="inline"
+        @finish="onFinish"
+      >
+        <a-form-item name="user">
+          <a-input v-model:value="formState.user" placeholder="查询姓名">
+            <template #prefix>
+              <UserOutlined />
+            </template>
+          </a-input>
+        </a-form-item>
+        <a-form-item name="code">
+          <a-input v-model:value="formState.code" placeholder="查询工号">
+            <template #prefix>
+              <LockOutlined />
+            </template>
+          </a-input>
+        </a-form-item>
+        <div>
+          <a-button type="primary" html-type="submit">查询</a-button>
+          <a-button @click="onReset">重置</a-button>
+          <a-button type="primary" @click="onExport">导出</a-button>
+        </div>
+      </a-form>
     </template>
     <template #name="{ text, record }">
       {{ record.key }}&nbsp;<a>{{ text }}</a>
     </template>
-  </PageTable>
+  </a-table>
 </template>
 <script>
-import { defineComponent, reactive, toRaw } from "vue";
+import { defineComponent, ref, reactive, toRaw } from "vue";
+import usePageTable from "@/hooks/usePageTable";
 
 const columns = [
   {
@@ -44,44 +64,70 @@ const columns = [
     dataIndex: "address",
   },
 ];
-const data = [
-  {
-    key: "1",
-    name: "John Brown",
-    money: "￥300,000.00",
-    address: "New York No. 1 Lake Park",
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    money: "￥1,256,000.00",
-    address: "London No. 1 Lake Park",
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    money: "￥120,000.00",
-    address: "Sidney No. 1 Lake Park",
-  },
-];
+
+const getTableList = async (pag) => {
+  console.info("getTableList", pag);
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        ...pag,
+        total: 400,
+        list: [
+          {
+            key: "1",
+            name: "John Brown",
+            money: "￥300,000.00",
+            address: "New York No. 1 Lake Park",
+          },
+          {
+            key: "2",
+            name: "Jim Green",
+            money: "￥1,256,000.00",
+            address: "London No. 1 Lake Park",
+          },
+          {
+            key: "3",
+            name: "Joe Black",
+            money: "￥120,000.00",
+            address: "Sidney No. 1 Lake Park",
+          },
+        ],
+      });
+    }, 1000);
+  });
+};
+
 export default defineComponent({
   setup() {
+    const tableRef = ref();
+    const formRef = ref();
+
+    const { scroll, loading, pagination, data, run } = usePageTable(
+      tableRef,
+      getTableList
+    );
+
     const formState = reactive({
       user: "",
       code: "",
     });
+    const onFinish = () => {
+      run({
+        ...toRaw(formState),
+        pageNo: 1,
+      });
+    };
 
-    const loadData = async (pag) => {
-      console.info("loadData", pag, toRaw(formState));
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({
-            pageNo: 1,
-            pageSize: 20,
-            total: 400,
-            list: data,
-          });
-        }, 1000);
+    const onReset = () => {
+      formRef.value.resetFields();
+      onFinish();
+    };
+
+    const onChange = (pag) => {
+      run({
+        pageNo: pag.current,
+        pageSize: pag.pageSize,
+        ...toRaw(formState),
       });
     };
 
@@ -90,10 +136,21 @@ export default defineComponent({
     };
 
     return {
+      tableRef,
+      formRef,
+
       formState,
+
+      loading,
+      scroll,
+      pagination,
+
+      dataSource: data,
       columns,
-      loadData,
       onExport,
+      onFinish,
+      onReset,
+      onChange,
     };
   },
 });
