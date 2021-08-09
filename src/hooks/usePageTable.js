@@ -3,7 +3,7 @@ import { useRequest } from "vue-request";
 
 const defaultHeight = 270;
 
-export default (tableRef, service, options) => {
+export default (service, options) => {
   const scroll = ref({});
 
   const pageNo = ref(options?.pageNo || 1);
@@ -47,7 +47,9 @@ export default (tableRef, service, options) => {
   };
 
   onMounted(() => {
-    const $title = tableRef.value.$el.getElementsByClassName("ant-table-title");
+    if (!options?.ref) return;
+    const $title =
+      options.ref.value.$el.getElementsByClassName("ant-table-title");
     let excessHeight = (options?.excessHeight || 0) + defaultHeight;
     if ($title.length) excessHeight += $title[0].offsetHeight;
     scroll.value = {

@@ -99,8 +99,10 @@ export default defineComponent({
     });
 
     const { scroll, loading, pagination, data, run } = usePageTable(
-      tableRef,
-      getTableList
+      getTableList,
+      {
+        ref: tableRef,
+      }
     );
 
     const onFinish = () => {
