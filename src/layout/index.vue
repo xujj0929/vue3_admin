@@ -15,7 +15,7 @@
         </a-layout-header>
         <a-layout-content>
           <LayoutBreadcrumb />
-          <div class="router-view">
+          <div class="router-view" :key="routerKey">
             <router-view />
           </div>
         </a-layout-content>
@@ -41,6 +41,9 @@ export default defineComponent({
   setup() {
     const copyright = process.env.VUE_APP_COPYRIGHT;
 
+    const routerKey = ref(new Date().getTime());
+    provide("routerKey", routerKey);
+
     const collapsed = ref(false);
     provide("collapsed", collapsed);
 
@@ -48,6 +51,7 @@ export default defineComponent({
     const { loading: userInfoLoading } = useLoadUserInfo();
 
     return {
+      routerKey,
       copyright,
       collapsed,
       routeLoading,
@@ -79,16 +83,6 @@ export default defineComponent({
     border-radius: 8px;
     border: 5px solid #eee;
     background: #fff;
-    > .ant-breadcrumb {
-      border-radius: 6px;
-      user-select: none;
-      position: sticky;
-      top: 0;
-      padding: 5px;
-      background: #fff;
-      border-bottom: 2px solid #eee;
-      z-index: 2;
-    }
     > .router-view {
       flex: 1;
       padding-left: 10px;

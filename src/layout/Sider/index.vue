@@ -78,9 +78,4 @@ export default defineComponent({
     width: 0px;
   }
 }
-.ant-menu-inline-collapsed {
-  :deep(.ant-menu-submenu-selected) {
-    background: #1890ff;
-  }
-}
 </style>

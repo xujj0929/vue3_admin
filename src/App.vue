@@ -1,10 +1,13 @@
 <template>
-  <router-view />
+  <a-config-provider :locale="locale">
+    <router-view />
+  </a-config-provider>
 </template>
 
 <script>
 import { defineComponent, watch, onErrorCaptured } from "vue";
 import { notification } from "ant-design-vue";
+import zhCN from "ant-design-vue/es/locale/zh_CN";
 import { useRoute, useRouter } from "vue-router";
 
 export default defineComponent({
@@ -27,6 +30,9 @@ export default defineComponent({
         });
       }
     });
+    return {
+      locale: zhCN,
+    };
   },
 });
 </script>

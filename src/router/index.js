@@ -7,7 +7,6 @@ const routes = [
     path: "/",
     name: "layout",
     component: layout,
-    redirect: "/home",
     meta: {
       title: "首页",
     },

@@ -1,63 +1,31 @@
 <template>
-  <a-table
-    size="middle"
-    :columns="columns"
-    :data-source="dataSource.list"
-    :scroll="scroll"
-    :pagination="pagination"
-    :loading="loading"
-    @change="onChange"
-    bordered
-  >
-    <template #title>
-      <a-form
-        ref="formRef"
-        layout="inline"
-        :model="formState"
-        @finish="onFinish"
-      >
-        <a-form-item>
-          <a-input
-            name="formStateUser"
-            v-model:value="formState.user"
-            placeholder="查询姓名"
-          >
-            <template #prefix>
-              <UserOutlined style="color: rgba(0, 0, 0, 0.25)" />
-            </template>
-          </a-input>
-        </a-form-item>
-        <a-form-item>
-          <a-input
-            name="formStateCode"
-            v-model:value="formState.code"
-            placeholder="查询工号"
-          >
-            <template #prefix>
-              <LockOutlined style="color: rgba(0, 0, 0, 0.25)" />
-            </template>
-          </a-input>
-        </a-form-item>
-        <a-form-item>
-          <a-button type="primary" html-type="submit"> 查询 </a-button>
-        </a-form-item>
-      </a-form>
+  <PageTable :formModel="formState" :columns="columns" :data-source="loadData">
+    <template #form>
+      <a-form-item name="user">
+        <a-input v-model:value="formState.user" placeholder="查询姓名">
+          <template #prefix>
+            <UserOutlined style="color: rgba(0, 0, 0, 0.25)" />
+          </template>
+        </a-input>
+      </a-form-item>
+      <a-form-item name="code">
+        <a-input v-model:value="formState.code" placeholder="查询工号">
+          <template #prefix>
+            <LockOutlined style="color: rgba(0, 0, 0, 0.25)" />
+          </template>
+        </a-input>
+      </a-form-item>
+    </template>
+    <template #button>
+      <a-button type="primary" @click="onExport"> 导出 </a-button>
     </template>
     <template #name="{ text, record }">
       {{ record.key }}&nbsp;<a>{{ text }}</a>
     </template>
-  </a-table>
+  </PageTable>
 </template>
 <script>
-import {
-  defineComponent,
-  onMounted,
-  ref,
-  reactive,
-  toRaw,
-  computed,
-} from "vue";
-import useGetTableScroll from "@/hooks/useGetTableScroll";
+import { defineComponent, reactive, toRaw } from "vue";
 
 const columns = [
   {
@@ -98,52 +66,34 @@ const data = [
 ];
 export default defineComponent({
   setup() {
-    const formRef = ref();
-    const loading = ref(true);
-    const dataSource = ref({
-      current: 1,
-      total: 400,
-      list: [],
-    });
     const formState = reactive({
       user: "",
       code: "",
     });
-    const pagination = computed(() => {
-      return {
-        current: dataSource.value.current,
-        pageSize: 20,
-        total: dataSource.value.total,
-      };
-    });
-    const onFinish = () => {
-      console.log(toRaw(formState));
-    };
-    const onChange = (pag) => {
-      console.info(pag);
-    };
-    const { scroll } = useGetTableScroll(formRef);
 
-    onMounted(() => {
-      setTimeout(() => {
-        dataSource.value = {
-          current: 1,
-          total: 400,
-          list: data,
-        };
-        loading.value = false;
-      }, 1000);
-    });
+    const loadData = async (pag) => {
+      console.info("loadData", pag, toRaw(formState));
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({
+            pageNo: 1,
+            pageSize: 20,
+            total: 400,
+            list: data,
+          });
+        }, 1000);
+      });
+    };
+
+    const onExport = () => {
+      console.info("list.onExport");
+    };
+
     return {
-      scroll,
-      loading,
-      formRef,
       formState,
       columns,
-      dataSource,
-      pagination,
-      onFinish,
-      onChange,
+      loadData,
+      onExport,
     };
   },
 });

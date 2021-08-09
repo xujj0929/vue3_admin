@@ -73,7 +73,7 @@ export default defineComponent({
         setTimeout(() => {
           //调用登录接口 保存token到本地
           localStorage.setItem("token", toRaw(formState));
-          router.push("/");
+          router.push({ name: "home" });
           loading.value = false;
         }, 1000);
       } catch (error) {
