@@ -18,18 +18,10 @@
         @finish="onFinish"
       >
         <a-form-item name="user">
-          <a-input v-model:value="formState.user" placeholder="查询姓名">
-            <template #prefix>
-              <UserOutlined />
-            </template>
-          </a-input>
+          <a-input v-model:value="formState.user" placeholder="查询姓名" />
         </a-form-item>
         <a-form-item name="code">
-          <a-input v-model:value="formState.code" placeholder="查询工号">
-            <template #prefix>
-              <LockOutlined />
-            </template>
-          </a-input>
+          <a-input v-model:value="formState.code" placeholder="查询工号" />
         </a-form-item>
         <div>
           <a-button type="primary" html-type="submit">查询</a-button>
@@ -66,7 +58,6 @@ const columns = [
 ];
 
 const getTableList = async (pag) => {
-  console.info("getTableList", pag);
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
@@ -102,15 +93,16 @@ export default defineComponent({
     const tableRef = ref();
     const formRef = ref();
 
+    const formState = reactive({
+      user: "",
+      code: "",
+    });
+
     const { scroll, loading, pagination, data, run } = usePageTable(
       tableRef,
       getTableList
     );
 
-    const formState = reactive({
-      user: "",
-      code: "",
-    });
     const onFinish = () => {
       run({
         ...toRaw(formState),
