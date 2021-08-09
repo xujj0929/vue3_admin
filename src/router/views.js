@@ -5,9 +5,6 @@ export const routerView = {
     return h(resolveComponent("router-view"));
   },
 };
-export const home = () =>
-  import(/* webpackChunkName: "views-home" */ "@/views/Home.vue");
-export const login = () =>
-  import(/* webpackChunkName: "views-login" */ "@/views/User/Login.vue");
-export const userList = () =>
-  import(/* webpackChunkName: "views-user" */ "@/views/User/List.vue");
+export const home = () => import("@/views/Home.vue");
+export const login = () => import("@/views/User/Login.vue");
+export const userList = () => import("@/views/User/List.vue");
