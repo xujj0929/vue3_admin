@@ -23,11 +23,11 @@ instance.interceptors.response.use(
     const res = response.data;
     const code = res.code;
     if (code == 200) return res.data || true;
-    return Promise.reject(res.message);
+    return Promise.reject(res);
   },
   (error) => {
-    console.info("err" + error);
-    return null;
+    console.error(error);
+    return Promise.reject(error.message);
   }
 );
 

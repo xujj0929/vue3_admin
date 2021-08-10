@@ -6,6 +6,7 @@
 
 <script>
 import { defineComponent, watch, onErrorCaptured } from "vue";
+import md5 from "js-md5";
 import { notification } from "ant-design-vue";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import { useRoute, useRouter } from "vue-router";
@@ -23,10 +24,11 @@ export default defineComponent({
       );
     });
     onErrorCaptured((err) => {
-      if (err && typeof err == "string") {
+      if (err && typeof err.message == "string") {
         notification.warning({
+          key: md5(err.message),
           message: "提示",
-          description: err,
+          description: err.message,
         });
       }
     });
