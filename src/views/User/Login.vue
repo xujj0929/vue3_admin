@@ -6,6 +6,9 @@
     @finish="onFinish"
     scrollToFirstError
   >
+    <a-divider>
+      <a-typography-title :level="3">登录</a-typography-title>
+    </a-divider>
     <a-form-item name="username">
       <a-input
         type="text"
@@ -26,12 +29,10 @@
         <router-link :to="{ name: 'login' }">忘记密码</router-link>
       </a-row>
     </a-form-item>
-    <a-form-item>
-      <a-button type="primary" htmlType="submit" :loading="loading">
-        立即登录
-      </a-button>
-    </a-form-item>
-    <div>{{ copyright }}</div>
+    <a-button type="primary" htmlType="submit" :loading="loading" block>
+      立即登录
+    </a-button>
+    <a-divider>{{ copyright }}</a-divider>
   </a-form>
 </template>
 <script>
@@ -102,12 +103,5 @@ export default defineComponent({
   padding: 20px 20px 10px;
   border-radius: 5px;
   background: #fff;
-  &::before {
-    display: block;
-    content: "登录";
-    font-size: 18px;
-    font-weight: bold;
-    padding-bottom: 20px;
-  }
 }
 </style>

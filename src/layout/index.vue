@@ -15,8 +15,8 @@
         </a-layout-header>
         <a-layout-content>
           <LayoutBreadcrumb />
-          <div class="router-view" :key="routerKey">
-            <router-view />
+          <div class="router-view">
+            <router-view :key="routerKey" />
           </div>
         </a-layout-content>
         <a-layout-footer>{{ copyright }}</a-layout-footer>
@@ -91,9 +91,6 @@ export default defineComponent({
       border-bottom: 10px solid #fff;
       background: #fff;
       overflow-y: scroll;
-      // &::-webkit-scrollbar {
-      //   background: #eee;
-      // }
     }
   }
   > .ant-layout-footer {

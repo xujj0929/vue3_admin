@@ -23,11 +23,11 @@
         <a-form-item name="code">
           <a-input v-model:value="formState.code" placeholder="查询工号" />
         </a-form-item>
-        <div>
+        <a-space>
           <a-button type="primary" html-type="submit">查询</a-button>
           <a-button @click="onReset">重置</a-button>
           <a-button type="primary" @click="onExport">导出</a-button>
-        </div>
+        </a-space>
       </a-form>
     </template>
     <template #name="{ text, record }">

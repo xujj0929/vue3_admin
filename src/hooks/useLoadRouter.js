@@ -43,6 +43,7 @@ export default () => {
       const fullPathList = router.getRoutes().map((e) => e.path);
       const replace = decodeURIComponent(route.query.replace);
       if (fullPathList.includes(replace)) router.replace(route.query.replace);
+      else router.replace({ name: "home" });
     }
     loading.value = false;
   }, 1000);

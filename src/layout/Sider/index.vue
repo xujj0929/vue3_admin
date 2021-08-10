@@ -41,7 +41,7 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
 
-    const selectedKeys = ref(["home"]);
+    const selectedKeys = ref([route.name]);
     const openKeys = ref([]);
     const routes = inject("routes");
 
