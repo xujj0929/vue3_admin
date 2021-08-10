@@ -1,4 +1,4 @@
-import { onMounted, computed, ref } from "vue";
+import { onMounted, computed, ref, nextTick } from "vue";
 import { useRequest } from "vue-request";
 
 const defaultHeight = 270;
@@ -48,10 +48,17 @@ export default (service, options) => {
 
   onMounted(() => {
     if (!options?.ref) return;
-    const $title =
-      options.ref.value.$el.getElementsByClassName("ant-table-title");
+    const $el = options.ref.value.$el;
+    const $title = $el.getElementsByClassName("ant-table-title");
     let excessHeight = (options?.excessHeight || 0) + defaultHeight;
     if ($title.length) excessHeight += $title[0].offsetHeight;
+    const $body = $el.getElementsByClassName("ant-table-body");
+    if ($body.length) {
+      nextTick(() => {
+        $body[0].style.height = "100vh";
+      });
+    }
+
     scroll.value = {
       y: `calc(100vh - ${excessHeight}px)`,
     };
