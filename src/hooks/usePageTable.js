@@ -53,15 +53,14 @@ export default (service, options) => {
     let excessHeight = (options?.excessHeight || 0) + defaultHeight;
     if ($title.length) excessHeight += $title[0].offsetHeight;
     const $body = $el.getElementsByClassName("ant-table-body");
+    const height = `calc(100vh - ${excessHeight}px)`;
     if ($body.length) {
       nextTick(() => {
-        $body[0].style.height = "100vh";
+        $body[0].style.height = height;
       });
     }
 
-    scroll.value = {
-      y: `calc(100vh - ${excessHeight}px)`,
-    };
+    scroll.value = { y: height };
   });
 
   return {
