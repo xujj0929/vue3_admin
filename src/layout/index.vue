@@ -1,5 +1,5 @@
 <template>
-  <a-spin :spinning="routeLoading" tip="用户资料加载中...">
+  <a-spin :spinning="loading" tip="用户资料加载中...">
     <a-layout style="height: 100vh">
       <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
         <Sider />
@@ -26,7 +26,6 @@
 </template>
 <script>
 import { defineComponent, ref, provide } from "vue";
-import useLoadRouter from "@/hooks/useLoadRouter";
 import useLoadUserInfo from "@/hooks/useLoadUserInfo";
 import Sider from "./Sider";
 import UserDropdown from "./UserDropdown";
@@ -47,15 +46,13 @@ export default defineComponent({
     const collapsed = ref(false);
     provide("collapsed", collapsed);
 
-    const { loading: routeLoading } = useLoadRouter();
-    const { loading: userInfoLoading } = useLoadUserInfo();
+    const { loading } = useLoadUserInfo();
 
     return {
       routerKey,
       copyright,
       collapsed,
-      routeLoading,
-      userInfoLoading,
+      loading,
     };
   },
 });

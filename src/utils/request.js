@@ -1,4 +1,6 @@
 import axios from "axios";
+import md5 from "js-md5";
+import { notification } from "ant-design-vue";
 
 const instance = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
@@ -23,11 +25,24 @@ instance.interceptors.response.use(
     const res = response.data;
     const code = res.code;
     if (code == 200) return res.data || true;
+    const message = res.message;
+    if (message) {
+      notification.warning({
+        key: md5(message),
+        message: "提示",
+        description: message,
+      });
+    }
+    if (code == 401) {
+      localStorage.removeItem("token");
+      location.href = "/";
+      location.replace();
+    }
     return Promise.reject(res);
   },
   (error) => {
     console.error(error);
-    return Promise.reject(error.message);
+    return Promise.reject(error);
   }
 );
 

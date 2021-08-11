@@ -9,10 +9,10 @@
     <a-divider>
       <a-typography-title :level="3">登录</a-typography-title>
     </a-divider>
-    <a-form-item name="username">
+    <a-form-item name="account">
       <a-input
         type="text"
-        v-model:value="formState.username"
+        v-model:value="formState.account"
         placeholder="请输入账号"
       />
     </a-form-item>
@@ -38,20 +38,22 @@
 <script>
 import { defineComponent, reactive, ref, toRaw } from "vue";
 import { useRouter } from "vue-router";
+import { useRequest } from "vue-request";
+
+import { userLogin } from "@/api/user";
 
 export default defineComponent({
   setup() {
     const router = useRouter();
     const copyright = process.env.VUE_APP_COPYRIGHT;
-    const loading = ref(false);
     const formRef = ref();
     const formState = reactive({
-      username: "",
+      account: "",
       password: "",
       setup: false,
     });
     const rules = {
-      username: [
+      account: [
         {
           required: true,
           message: "请输入账号",
@@ -67,18 +69,19 @@ export default defineComponent({
       ],
     };
 
+    const { run, data, loading } = useRequest(userLogin, {
+      manual: true,
+    });
+
     const onFinish = async () => {
       try {
         await formRef.value.validate();
-        loading.value = true;
-        setTimeout(() => {
-          //调用登录接口 保存token到本地
-          localStorage.setItem("token", toRaw(formState));
-          router.push({ name: "home" });
-          loading.value = false;
-        }, 1000);
+        await run(toRaw(formState));
+        if (!data.value) return;
+        localStorage.setItem("token", data.value);
+        router.push({ name: "home" });
       } catch (error) {
-        console.error(error);
+        console.error("error", error);
       }
     };
 
