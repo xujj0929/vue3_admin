@@ -48,12 +48,14 @@ export default () => {
       filterRoute(_routes).forEach((e) => router.addRoute("layout", e));
 
       //判断是否重定向页面
-      if (route.query.replace) {
+      const replace = route.query.replace;
+      if (replace) {
         const fullPathList = router.getRoutes().map((e) => e.path);
-        const replace = decodeURIComponent(route.query.replace);
-        if (fullPathList.includes(replace)) router.replace(route.query.replace);
-        else router.replace({ name: "home" });
+        const replace = decodeURIComponent(replace);
+        if (fullPathList.includes(replace)) return router.replace(replace);
       }
+
+      router.replace({ name: "home" });
     },
   });
 

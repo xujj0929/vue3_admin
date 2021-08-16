@@ -79,7 +79,7 @@ export default defineComponent({
         await run(toRaw(formState));
         if (!data.value) return;
         localStorage.setItem("token", data.value);
-        router.push({ name: "home" });
+        router.replace("/");
       } catch (error) {
         console.error("error", error);
       }
